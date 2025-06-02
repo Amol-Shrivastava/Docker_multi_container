@@ -8,6 +8,25 @@ on:
 
 # what all actions you want to be taken when you run this action
 jobs:
+  lint_client:
+    name: Lint client folder
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout client code
+        uses: actions/checkout@v3
+
+      - name: prepare node environment for linting
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install dependencies and run linting
+        run: |
+          cd client
+          npm install
+          npm run lint
+
   build_and_push:
     name: Build & push docker images
     runs-on: ubuntu-latest
