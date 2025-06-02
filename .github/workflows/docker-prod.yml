@@ -44,7 +44,7 @@ jobs:
           context: ./server
           file: ./server/Dockerfile
           push: true
-          tags: amol234docker/Backend:latest
+          tags: amol234docker/backend:latest
 
       #STEP 6: BUILD AND PUSH WORKER DOCKER IMAGE
       - name: Build and push worker docker images
