@@ -35,7 +35,7 @@ jobs:
           context: ./client
           file: ./client/Dockerfile
           push: true
-          tags: amol234docker/Frontend:latest
+          tags: amol234docker/frontend:latest
 
       #STEP 5: BUILD AND PUSH SERVER DOCKER IMAGE
       - name: Build and push server IMAGE
