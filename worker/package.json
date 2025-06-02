@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "name": "worker-package",
+  "dependencies": {
+    "nodemon": "*",
+    "redis": "*",
+    "dotenv": "*"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon"
+  },
+  "type": "module",
+  "main": "index.js"
+}

@@ -1,0 +1,92 @@
+version: "3"
+
+services:
+  postgres:
+    image: postgres:13-alpine
+    container_name: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres_password
+      - POSTGRES_DB=postgres
+    networks:
+      - backendnet
+
+  redis:
+    image: redis:6.2-alpine
+    container_name: redis
+    command: ["redis-server", "--bind", "0.0.0.0"]
+    networks:
+      - backendnet
+
+  api:
+    container_name: backend
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./server
+    working_dir: /app
+    volumes:
+      - /app/node_modules
+      - /c/Users/User/practice_05_Docker_project_01/server:/app
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - POSTGRES_USER=postgres
+      - PG_HOST=postgres
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=postgres_password
+      - PG_PORT=5432
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "5000:5000"
+    networks:
+      - backendnet
+
+  client:
+    container_name: frontend
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./client
+    volumes:
+      - /app/node_modules
+      - /c/Users/User/practice_05_Docker_project_01/client:/app
+    depends_on:
+      - api
+    networks:
+      - backendnet
+    ports:
+      - "3000:3000"
+
+  worker:
+    container_name: worker_middleware
+    build:
+      context: ./worker
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /app/node_modules
+      - /c/Users/User/practice_05_Docker_project_01/worker:/app
+    depends_on:
+      - redis
+      - api
+    networks:
+      - backendnet
+
+  nginx:
+    restart: always
+    container_name: nginx_proxy
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8080:80"
+    depends_on:
+      - client
+      - api
+    networks:
+      - backendnet
+
+networks:
+  backendnet:
+    driver: bridge
