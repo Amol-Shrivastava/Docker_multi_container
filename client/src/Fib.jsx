@@ -52,16 +52,29 @@ const Fib = () => {
     // return (<div> No calculation stored.</div>)
 
     const entries = [];
+    if (Array.isArray(values) && values.length) {
+      for (let key in values) {
+        entries.push(
+          <div key={key}>
+            For index {key} I calculated {values[key]}
+          </div>
+        );
+      }
 
-    for (let key in values) {
-      entries.push(
-        <div key={key}>
-          For index {key} I calculated {values[key]}
-        </div>
-      );
+      return entries;
+    } else if (values instanceof Object && Object.keys(values).length) {
+      for (let key in values) {
+        entries.push(
+          <div key={key}>
+            For index {key} I calculated {values[key]}
+          </div>
+        );
+      }
+
+      return entries;
     }
 
-    return entries.length ? entries : <div>No calculation stored.</div>;
+    return <div>No calculation stored.</div>;
   };
 
   const handleSubmit = async (e) => {
